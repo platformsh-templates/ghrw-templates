@@ -1,0 +1,34 @@
+on:
+  workflow_call:
+#    secrets:
+#     # The calling workflow should use `inherit` so we shouldnt need to specify the individual secrets here
+#      TEMPLATES_GITHUB_TOKEN:
+#        required: true
+#      TEMPLATES_CLI_TOKEN:
+#        required: true
+
+jobs:
+  test-pr-env:
+    name: TestPrEnvironment
+    runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'platformsh-templates' && github.event.pull_request.draft == false }}
+    steps:
+      - name: 'Get Project ID'
+        id: 'get-proj-id'
+        uses: platformsh/gha-retrieve-projectid@main
+        with:
+          github_token: ${{ secrets.TEMPLATES_GITHUB_TOKEN }}
+
+      - name: 'Get Production URL'
+        id: 'get-prod-url'
+        uses: platformsh/gha-retrieve-production-url@main
+        with:
+          platformsh_token: ${{ secrets.TEMPLATES_CLI_TOKEN }}
+          project_id: ${{ steps.get-proj-id.outputs.project_id }}
+
+      - name: 'Run Pull Request Tests'
+        id: get-target-url
+        uses: platformsh/gha-template-pr-tests@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          baseline-url: ${{ steps.get-prod-url.outputs.production_url }}
