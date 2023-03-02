@@ -27,8 +27,7 @@ jobs:
         uses: platformsh/gha-retrieve-projectid@main
         with:
           github_token: ${{ secrets.TEMPLATES_GITHUB_TOKEN }}
-        secrets: inherit
-
+          
       - name: 'Get Production URL'
         id: 'get-prod-url'
         uses: platformsh/gha-retrieve-production-url@main
