@@ -1,11 +1,5 @@
 on:
   workflow_call:
-#    secrets:
-#     # The calling workflow should use `inherit` so we shouldnt need to specify the individual secrets here
-#      TEMPLATES_GITHUB_TOKEN:
-#        required: true
-#      TEMPLATES_CLI_TOKEN:
-#        required: true
 
 jobs:
   test-pr-env:
