@@ -7,15 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.repository_owner == 'platformsh-templates' && github.event.pull_request.draft == false }}
     steps:
-      - name: 'Do I have the token?'
-        shell: bash
-        run: |
-          echo "Do I have the secret?"
-          if [[ -z "${{ secrets.TEMPLATES_GITHUB_TOKEN }}" ]]; then
-            echo "the GH token from secrets is not available."
-          else
-            printf "We should have the gh token: %s\n" "${{ secrets.TEMPLATES_GITHUB_TOKEN }}"
-          fi
       - name: 'Get Project ID'
         id: 'get-proj-id'
         uses: platformsh/gha-retrieve-projectid@main
