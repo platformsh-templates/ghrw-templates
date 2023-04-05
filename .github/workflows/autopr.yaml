@@ -12,7 +12,8 @@ jobs:
         uses: platformsh/gha-prep-for-autopr@main
         with:
           github-token: ${{ secrets.TEMPLATES_GITHUB_TOKEN }}
-          status-checks: 'call-reusable-testpr / TestPrEnvironment'
+          #status-checks: 'call-reusable-testpr / TestPrEnvironment'
+          status-checks: 'TestPREnvironment-RW / TestPrEnvironment'
 
       - name: 'Create & merge PR'
         id: create-merge-pr
