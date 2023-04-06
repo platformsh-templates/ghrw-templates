@@ -7,7 +7,9 @@ via Repository Variables. See workflow description for possible inputs.
 ### Description
 Creates an auto merging PR when a target branch is updated.
 ### Inputs
-* `status-checks` - *Optional*. Comma seperated list of status checks that must pass for the PR to be accepted. Defaults to   
+* `CW_JOBID` - *Optional*. The name of the job id in the calling workflow that calls the testprenvironments.yaml 
+reusable workflow. Defaults to `TestPrEnv-CW`
+* `STATUS_CHECKS` - *Optional*. Comma seperated list of status checks that must pass for the PR to be accepted. Defaults to   
 `TestPrEnv-CW / TestPrEnvironment`. Please note that if the required status check is contained in a reusable workflow, the naming convention is `<calling-workflow-job-id> / <reusable-workflow-job-id>`. 
 
 ### Uses
@@ -84,7 +86,7 @@ Runs a series of tests against the Pull Request environment to ensure no regress
 [platformsh/gha-template-pr-tests](https://github.com/platformsh/gha-template-pr-tests) action for more details.
 
 ### Inputs
-* `delay-start` - _Optional_. Delay the start of testing for X seconds after the PR environment is available. Please 
+* `DELAY_START` - _Optional_. Delay the start of testing for X seconds after the PR environment is available. Please 
 note this is in seconds, not milliseconds. Must be a valid integer.
 
 ### Uses
