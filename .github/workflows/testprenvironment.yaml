@@ -2,8 +2,9 @@ on:
   workflow_call:
 
 jobs:
-  test-pr-env:
-    name: TestPrEnvironment
+  # !!!! WARNING !!!!
+  # If for some reason this job id needs to change, you'll need to update the value for env:RW_PRENV_JOBID in autopr.yaml
+  TestPrEnvironment:
     runs-on: ubuntu-latest
     if: ${{ github.repository_owner == 'platformsh-templates' && github.event.pull_request.draft == false }}
     steps:
