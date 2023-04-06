@@ -5,7 +5,10 @@ via Repository Variables. See workflow description for possible inputs.
 
 ## [autopr.yaml](./.github/workflows/autopr.yaml) 
 ### Description
-Creates an auto merging PR when a target branch is updated
+Creates an auto merging PR when a target branch is updated.
+### Inputs
+* `status-checks` - *Optional*. Comma seperated list of status checks that must pass for the PR to be accepted. Defaults to   
+`TestPrEnv-CW / TestPrEnvironment`. Please note that if the required status check is contained in a reusable workflow, the naming convention is `<calling-workflow-job-id> / <reusable-workflow-job-id>`. 
 
 ### Uses
 * [platformsh/gha-prep-for-autopr](https://github.com/platformsh/gha-prep-for-autopr)
