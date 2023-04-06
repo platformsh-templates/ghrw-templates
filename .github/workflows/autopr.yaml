@@ -1,20 +1,10 @@
 on:
   workflow_call:
-    inputs:
-      # CallingWorkflow-jobid
-      cw-jobid:
-        required: false
-        type: string
-        default: 'TestPrEnv-CW'
-        description: 'The name of the job id in the calling workflow. Defaults to `TestPrEnv-CW`'
-      status-checks:
-        required: false
-        type: string
-        default: ''
-        description: "Comma seperated list of status checks that must pass for the PR to be accepted. Defaults to `platformsh,TestPrEnv-CW / TestPrEnvironment`"
+
 env:
   # This is the job id at line 5 from testprenvironment.yaml. If that job id changes, you'll need to update this value
   RW_PRENV_JOBID: 'TestPrEnvironment'
+  CW_PRENV_JOBID: 'TestPrEnv-CW'
 jobs:
   create-auto-pr:
     name: "Creates an auto merging PR when the branch is updated"
@@ -24,12 +14,14 @@ jobs:
       - name: 'Prep Default Status Checks'
         id: prep_default_sc
         run: |
-          echo "defaultStatusCheck=${{ inputs.cw-jobid }} / ${{ env.RW_PRENV_JOBID }}" >> $GITHUB_OUTPUT
+          userJobID=${{ vars.CW_JOBID }}
+          envJobID=${{ env.CW_PRENV_JOBID }}
+          echo "defaultStatusCheck=${userJobID:-${envJobID}} / ${{ env.RW_PRENV_JOBID }}" >> $GITHUB_OUTPUT
       - name: 'Prep Status Checks'
         id: prep_status_check
         run: |
           # get the value the user might have passed in to override ALL defaults
-          userStatusCheck=${{ inputs.status-checks }}
+          userStatusCheck=${{ vars.STATUS_CHECKS }}
           # now get our "default" that takes any updated calling workflow job id and prepends it the the testprenvironment job id
           defaultStatusCheck=${{ steps.prep_default_sc.outputs.defaultStatusCheck }}
           # if they actually gave us something, use it; otherwise use our default
