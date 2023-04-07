@@ -1,7 +1,7 @@
 # Platform.sh Reusable GitHub Workflows for Templates
 
 A collection of reusable GitHub workflows that are used by the Platform.sh collection of templates. Inputs are received 
-via Repository Variables. See workflow description for possible inputs.
+via [Repository Variables](https://docs.github.com/en/actions/learn-github-actions/variables#creating-configuration-variables-for-a-repository). See workflow description for possible inputs.
 
 ## [autopr.yaml](./.github/workflows/autopr.yaml) 
 ### Description
