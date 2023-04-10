@@ -40,7 +40,7 @@ jobs:
           git config --global user.email "devrel@internal.platform.sh"
           git config --global user.name "platformsh-devrel"
 
-      - name: Test above
+      - name: "Sync updated psh configuration files"
         run: |
           if [ "${{ steps.changed-files.outputs.all_changed_files }}" == "" ];then
               echo "No relevant files modified. All is well."
