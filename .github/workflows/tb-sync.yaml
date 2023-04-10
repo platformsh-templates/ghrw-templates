@@ -84,7 +84,7 @@ jobs:
               # Create the corresponding PR.
               prURL=$(gh pr create --head ${SYNC_BRANCH} --title "${prTitle}" --body "${prBody}")
 
-              if [ -z "${prURL} ]; then
+              if [ -z "${prURL}" ]; then
                 echo "::warning::Creating a PR in template builder for the latest changes failed."
                 echo "::debug::Command issued was:"
                 prCommand="pr create --head \"${SYNC_BRANCH}\" --title \"${prTitle}\" --body \"${prBody}\""
