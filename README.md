@@ -81,7 +81,20 @@ repository for the relevant template, and creates a pull request.
 * actions/checkout@v3
 * tj-actions/changed-files
 * actions/checkout@v2
+### Example: 
+```yaml
+name: Track and sync tracked files
+on:
+  push:
+    branches:
+      - main
+      - master
 
+jobs:
+  run-reusable-tb-sync:
+    uses: platformsh-templates/ghrw-templates/.github/workflows/tb-sync.yaml@main
+    secrets: inherit
+```
 
 ***
 ## [testprenvironments.yaml](./.github/workflows/testprenvironment.yaml)
