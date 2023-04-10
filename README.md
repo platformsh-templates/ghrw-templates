@@ -73,6 +73,10 @@ jobs:
 ***
 ## [tb-sync.yaml](./.github/workflows/tb-sync.yaml)
 ### Description
+Keeps Platform.sh configuration files in sync between a template's repository and the
+[template-builder](https://github.com/platformsh/template-builder) system. Upon detection of a change to a Platform.sh 
+configuration file(s), commits those changes to the [template-builder](https://github.com/platformsh/template-builder) 
+repository for the relevant template, and creates a pull request. 
 ### Uses
 * actions/checkout@v3
 * tj-actions/changed-files
