@@ -12,6 +12,9 @@ jobs:
         with:
           token: ${{ secrets.TEMPLATES_GITHUB_TOKEN }}
 
+      ####
+      # @todo move the list of configuration files we want to track to an organizational variable?
+      ####
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v29
@@ -52,8 +55,6 @@ jobs:
               SYNC_BRANCH=sync-$TEMPLATE
 
               # Clone template-builder, and create a new branch that matches changes in template repo.
-              # echo "Cloning template-builder"
-              # git clone git@github.com:platformsh/template-builder.git
               cd template-builder
               git checkout -b $SYNC_BRANCH
 
