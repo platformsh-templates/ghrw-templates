@@ -46,9 +46,8 @@ jobs:
       - name: "Sync updated psh configuration files"
         run: |
           if [ "${{ steps.changed-files.outputs.all_changed_files }}" == "" ];then
-              echo "No relevant files modified. All is well."
+              echo "::notice::No relevant files modified. All is well."
           else
-
               # Get current template name.
               arrIN=(${GITHUB_REPOSITORY//\// })
               TEMPLATE=${arrIN[1]}
@@ -68,6 +67,7 @@ jobs:
                 cp ../$file templates/$TEMPLATE/files/$file
                 git add templates/$TEMPLATE/files/$file
                 msg="${msg} Updates templates/${TEMPLATE}/files/${file}.${NL}"
+                echo "::notice::The configuration file ${file} has been changed and will be added to a PR for Template Builder."
               done
 
               # Commit and push to template-builder.
@@ -77,9 +77,18 @@ jobs:
               git status
               git push origin ${SYNC_BRANCH}
 
+              prTitle="Sync: matching ${GITHUB_REPOSITORY}"
+              prBody="Syncing updates for template ${TEMPLATE} made in the latest [pull request](https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA})."
+
               # Create the corresponding PR.
-              gh pr create \
-                --head ${SYNC_BRANCH} \
-                --title "Sync: matching ${GITHUB_REPOSITORY}" \
-                --body "Syncing updates made in the latest [pull request](https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA})."
+              prURL=$(gh pr create --head ${SYNC_BRANCH} --title "${prTitle}" --body "${prBody}")
+
+              if [ -z "${prURL} ]; then
+                echo "::warning::Creating a PR in template builder for the latest changes failed."
+                echo "::debug::Command issued was:"
+                prCommand="pr create --head \"${SYNC_BRANCH}\" --title \"${prTitle}\" --body \"${prBody}\""
+                echo "::debug::${prCommand}"
+              else
+                echo "::notice::Created a PR in template builder with the latest changes: ${prURL}."
+              fi
           fi
