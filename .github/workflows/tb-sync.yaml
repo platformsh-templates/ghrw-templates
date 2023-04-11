@@ -62,7 +62,7 @@ jobs:
               # if the remote branch already exists, then we need to check it out from origin. otherwise, create a new
               # local branch that we'll push up later
               # @todo is there a way to retrieve the remote name instead of assuming it is 'origin'?
-              git checkout -b "${SYNC_BRANCH}""${remoteBranch+ origin/${SYNC_BRANCH}}"
+              git checkout -b "${SYNC_BRANCH}" "${remoteBranch+origin/${SYNC_BRANCH}}"
 
               # Copy and stage the changed files
               echo "Syncing revisions into template-builder"
