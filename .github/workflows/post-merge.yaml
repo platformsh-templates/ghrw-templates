@@ -1,0 +1,12 @@
+on:
+  workflow_call:
+
+jobs:
+  tb-sync:
+    uses: platformsh-templates/ghrw-templates/.github/workflows/tb-sync.yaml@main
+    secrets: inherit
+  last-updated:
+    if: ${{ always() }}
+    needs: [tb-sync]
+    uses: platformsh-templates/ghrw-templates/.github/workflows/last-updated.yaml@main
+    secrets: inherit
