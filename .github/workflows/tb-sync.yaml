@@ -55,7 +55,14 @@ jobs:
 
               # Clone template-builder, and create a new branch that matches changes in template repo.
               cd template-builder
-              git checkout -b $SYNC_BRANCH
+              #let's make sure we have all the info from origin
+              git fetch origin
+              #now let's see if the banch we need already exists
+              remoteBranch=$(git ls-remote --heads origin "${SYNC_BRANCH}")
+              # if the remote branch already exists, then we need to check it out from origin. otherwise, create a new
+              # local branch that we'll push up later
+              # @todo is there a way to retrieve the remote name instead of assuming it is 'origin'?
+              git checkout -b "${SYNC_BRANCH}""${remoteBranch+ origin/${SYNC_BRANCH}}"
 
               # Copy and stage the changed files
               echo "Syncing revisions into template-builder"
