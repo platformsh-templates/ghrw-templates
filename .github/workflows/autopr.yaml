@@ -23,7 +23,7 @@ jobs:
           # get the value the user might have passed in to override ALL defaults
           userStatusCheck=${{ vars.STATUS_CHECKS }}
           # now get our "default" that takes any updated calling workflow job id and prepends it the the testprenvironment job id
-          defaultStatusCheck=${{ steps.prep_default_sc.outputs.defaultStatusCheck }}
+          defaultStatusCheck="${{ steps.prep_default_sc.outputs.defaultStatusCheck }}"
           # if they actually gave us something, use it; otherwise use our default
           echo "statusCheck=${userStatusCheck:-${defaultStatusCheck}}" >> $GITHUB_OUTPUT
       - name: 'Prep the repo for autoPR'
