@@ -1,0 +1,13 @@
+on:
+  workflow_call:
+
+jobs:
+  sync-issues-to-project:
+    name: "Add individual template issues to template-builder project"
+    runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'platformsh-templates' }}
+    steps:
+      - uses: actions/add-to-project@v0.4.1
+        with:
+          project-url: https://github.com/orgs/platformsh/projects/9
+          github-token: ${{ secrets.DEVREL_TOKEN }}
