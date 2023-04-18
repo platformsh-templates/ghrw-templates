@@ -9,5 +9,5 @@ jobs:
     steps:
       - uses: actions/add-to-project@v0.4.1
         with:
-          project-url: https://github.com/orgs/platformsh/projects/9
+          project-url: https://github.com/orgs/platformsh/projects/10
           github-token: ${{ secrets.DEVREL_TOKEN }}
