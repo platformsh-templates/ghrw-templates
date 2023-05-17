@@ -91,30 +91,44 @@ jobs:
               # Get current template name.
               arrIN=(${GITHUB_REPOSITORY//\// })
               TEMPLATE=${arrIN[1]}
+              # we need this in a later step as well
+              echo "TEMPLATENAME=${TEMPLATE}" >> $GITHUB_ENV
               SYNC_BRANCH=sync-$TEMPLATE
 
               # Clone template-builder, and create a new branch that matches changes in template repo.
               cd template-builder
               #let's make sure we have all the info from origin
               git fetch origin
-              #now let's see if the banch we need already exists
+              #now let's see if the branch we need already exists
               remoteBranch=$(git ls-remote --heads origin "${SYNC_BRANCH}")
               # if the remote branch already exists, then we need to check it out from origin. otherwise, create a new
               # local branch that we'll push up later
               # @todo is there a way to retrieve the remote name instead of assuming it is 'origin'?
               git checkout -b "${SYNC_BRANCH}" "${remoteBranch+origin/${SYNC_BRANCH}}"
 
+              # go ahead and get the data on the files that were changed in the commit
+              prFileData=$(gh api "/repos/${GITHUB_REPOSITORY}/pulls/${{ env.PRNUMBER }}/files")
+              
               # Copy and stage the changed files
               echo "Syncing revisions into template-builder"
               NL=$'\n'
               msg="Synching $GITHUB_REPOSITORY ($GITHUB_SHA).${NL}"
-
+              issueMsg=""
               for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-                echo "Syncing $file"
-                cp ../$file templates/$TEMPLATE/files/$file
-                git add templates/$TEMPLATE/files/$file
-                msg="${msg} Updates templates/${TEMPLATE}/files/${file}.${NL}"
-                echo "::notice::The configuration file ${file} has been changed and will be added to a PR for Template Builder."
+                # @todo this is brittle, especially if we increase the number of files we dont want to commit
+                # is there a way to filter these two files out of the list?
+                if [[ "${file}" != "composer.json" ]] && [[ "${file}" != "packages.json" ]]; then
+                  echo "Syncing $file"
+                  cp ../$file templates/$TEMPLATE/files/$file
+                  git add templates/$TEMPLATE/files/$file
+                  msg="${msg} Updates templates/${TEMPLATE}/files/${file}.${NL}"
+                  echo "::notice::The configuration file ${file} has been changed and will be added to a PR for Template Builder."
+                else
+                  # let's go ahead and build up our issue message
+                  issueMsg="${issueMsg}The package management file ${file} was changed. The following is the patch:${NL}```${NL}"
+                  filePatch=$(jq --arg filename "${file}" -r '.[] | select(.filename==$filename) | .patch' <<< ${prFileData})
+                  issueMsg="${issueMsg}${filePatch}${NL}```${NL}"
+                fi
               done
 
               # Commit and push to template-builder.
