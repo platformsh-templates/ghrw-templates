@@ -28,6 +28,8 @@ jobs:
             .platform/routes.yaml
             .platform/services.yaml
             .platform/applications.yaml
+            composer.json
+            packages.json
 
       - name: 'Set up Github token'
         id: setup-gh-token
