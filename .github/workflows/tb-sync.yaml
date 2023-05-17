@@ -1,6 +1,10 @@
 on:
   workflow_call:
 
+env:
+  TEMPLATEBUILDER: platformsh/template-builder
+  TBUPDATEBRANCH: updatesLocal
+
 jobs:
   sync-diffs-with-template-builder:
     name: "Track psh configuration files"
