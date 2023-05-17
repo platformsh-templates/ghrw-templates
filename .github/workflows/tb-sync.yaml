@@ -49,7 +49,41 @@ jobs:
           git config --global user.email "devrel@internal.platform.sh"
           git config --global user.name "platformsh-devrel"
 
+      - name: Get Pull Request Number
+        id: get-pr-number
+        shell: bash
+        run: |
+          # we need the pull request number that created the push that triggered this event.  
+          prNumber=$(gh api "/repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/pulls" | jq -r '.[] | .number')
+          
+          if [[ -n "$prNumber" ]]; then
+            continueJobs="yes"
+            echo "PRNUMBER=${prNumber}" >> $GITHUB_ENV  
+          else
+            continueJobs="no"
+          fi
+          
+          echo "CONTINUEJOBS=${continueJobs}" >> "$GITHUB_OUTPUT"
+
+      - name: Determine if push was from Template-Builder
+        if: steps.get-pr-number.outputs.CONTINUEJOBS == "yes"
+        id: determine-if-pr-from-tb
+        shell: bash
+        run: |
+          # if the push was from template builder, then we dont want to create a PR or issue back to template builder
+          prBranch=$(gh pr view ${{ env.PRNUMBER }} --json headRefName | jq -r '.headRefName')
+          if [[ "${{ env.TBUPDATEBRANCH }}" == "${prBranch}" ]]; then
+            continueJobs="no"
+          else
+            continueJobs="yes"
+          fi
+          
+          echo "CONTINUEJOBS=${continueJobs}" >> "$GITHUB_OUTPUT"
+
       - name: "Sync updated psh configuration files"
+        shell: bash
+        id: build-tb-pr
+        if: steps.determine-if-pr-from-tb.outputs.CONTINUEJOBS == "yes"
         run: |
           if [ "${{ steps.changed-files.outputs.all_changed_files }}" == "" ];then
               echo "::notice::No relevant files modified. All is well."
