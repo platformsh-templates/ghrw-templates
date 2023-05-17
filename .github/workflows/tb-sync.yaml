@@ -152,4 +152,40 @@ jobs:
               else
                 echo "::notice::Created a PR in template builder with the latest changes: ${prURL}."
               fi
+          
+              echo "ISSUEMSG=${issueMsg}" >> $GITHUB_OUTPUT
+          fi
+
+
+      - name: Create issue if package management files were changed
+        shell: bash
+        if: >-
+          steps.determine-if-pr-from-tb.outputs.CONTINUEJOBS == "yes" &&
+          (
+            contains(steps.changed-files.outputs.all_changed_files, 'composer.json') ||
+            contains(steps.changed-files.outputs.all_changed_files, 'packages.json')
+          )
+        run: |
+          NL=$'\n'          
+          # we want the link back to the PR that changed the package management file
+          prURL="https://github.com/$GITHUB_REPOSITORY/pulls/${{ env.PRNUMBER }}"
+
+          #now we need to set up the title and body of the issue and post to template builder
+          issueTitle="Package Management changes made to template ${{ env.TEMPLATENAME }}"
+          
+          issueBody="One or more package management files were changed in [pull request ${{ env.PRNUMBER }}]"
+          issueBody="${issueBody}(${prURL}) for template ${{ env.TEMPLATENAME }}.${NL}${NL}" 
+          issueBody="${issueBody}${{ steps.build-tb-pr.outputs.ISSUEMSG }}"
+          issueBody="${NL}${NL}Link to all changed files in the PR: [${prURL/files}](${prURL}/files)"
+          
+          # now create the issue
+          issueNumber=$(gh issue create -t "${issueTitle}" -R "${{ en.TEMPLATEBUILDER }} -b "${issueBody}")
+          
+          if [ -z "${issueNumber}" ]; then
+            echo "::warning::Creating an issue in template builder for changes to package management files failed!"
+            echo "::debug::Return from issue create command was:"
+            prCommand="pr create --head \"${SYNC_BRANCH}\" --title \"${prTitle}\" --body \"${prBody}\""
+            echo "::debug::${issueNumber}"
+          else
+            echo "::notice::Created an issue in template builder: ${issueNumber}."
           fi
