@@ -47,7 +47,7 @@ jobs:
         with:
           token: ${{ secrets.TEMPLATES_GITHUB_TOKEN }}
           repository: ${{ env.TEMPLATEBUILDER }}
-          path: template-builder
+          path: ${{ env.TBLOCALPATH }}
 
       - name: 'set git config'
         shell: bash
