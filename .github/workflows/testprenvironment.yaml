@@ -28,3 +28,5 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           baseline-url: ${{ steps.get-prod-url.outputs.production_url }}
           delay-start: ${{ vars.DELAY_START }}
+          baseline-header-response: $( [ -n "${{ vars.HEADER_RESPONSE }}" ] && echo "${{ vars.HEADER_RESPONSE }}" || echo 200 )
+          test-header-response: $( [ -n "${{ vars.HEADER_RESPONSE }}" ] && echo "${{ vars.HEADER_RESPONSE }}" || echo 200 )
