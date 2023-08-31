@@ -30,6 +30,31 @@ jobs:
 ```
 
 ***
+## [post-pr-acceptance.yaml](./.github/workflows/post-pr-acceptance.yaml)
+### Description
+Runs all other workflows and actions that should occur after a PR has been accepted.
+
+
+### Uses
+* [last-updated.yaml](./.github/workflows/last-updated.yaml)
+* [tb-sync.yaml](./.github/workflows/tb-sync.yaml)
+
+### Example:
+```yaml
+name: Runs post merge-acceptance workflows
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  run-reusable-post-pr-acceptance:
+    uses: platformsh-templates/ghrw-templates/.github/workflows/post-pr-acceptance.yaml@main
+    secrets: inherit
+```
+
+***
 ## [last-updated.yaml](./.github/workflows/last-updated.yaml)
 ### Description
 Updates the ./.platform/last.updated file with the current date
@@ -46,6 +71,32 @@ on:
 jobs:
   run-reusable-last-update:
     uses: platformsh-templates/ghrw-templates/.github/workflows/last-updated.yaml@main
+    secrets: inherit
+```
+
+***
+## [tb-sync.yaml](./.github/workflows/tb-sync.yaml)
+### Description
+Keeps Platform.sh configuration files in sync between a template's repository and the
+[template-builder](https://github.com/platformsh/template-builder) system. Upon detection of a change to a Platform.sh
+configuration file(s), commits those changes to the [template-builder](https://github.com/platformsh/template-builder)
+repository for the relevant template, and creates a pull request.
+### Uses
+* actions/checkout@v3
+* tj-actions/changed-files
+* actions/checkout@v2
+### Example:
+```yaml
+name: Track and sync tracked files
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  run-reusable-tb-sync:
+    uses: platformsh-templates/ghrw-templates/.github/workflows/tb-sync.yaml@main
     secrets: inherit
 ```
 
@@ -71,32 +122,6 @@ jobs:
 ```
 
 ***
-## [tb-sync.yaml](./.github/workflows/tb-sync.yaml)
-### Description
-Keeps Platform.sh configuration files in sync between a template's repository and the
-[template-builder](https://github.com/platformsh/template-builder) system. Upon detection of a change to a Platform.sh 
-configuration file(s), commits those changes to the [template-builder](https://github.com/platformsh/template-builder) 
-repository for the relevant template, and creates a pull request. 
-### Uses
-* actions/checkout@v3
-* tj-actions/changed-files
-* actions/checkout@v2
-### Example: 
-```yaml
-name: Track and sync tracked files
-on:
-  push:
-    branches:
-      - main
-      - master
-
-jobs:
-  run-reusable-tb-sync:
-    uses: platformsh-templates/ghrw-templates/.github/workflows/tb-sync.yaml@main
-    secrets: inherit
-```
-
-***
 ## [testprenvironments.yaml](./.github/workflows/testprenvironment.yaml)
 ### Description
 Runs a series of tests against the Pull Request environment to ensure no regressions have been introduced. See the 
@@ -105,6 +130,8 @@ Runs a series of tests against the Pull Request environment to ensure no regress
 ### Inputs
 * `DELAY_START` - _Optional_. Delay the start of testing for X seconds after the PR environment is available. Please 
 note this is in seconds, not milliseconds. Must be a valid integer.
+* `PR_ENV_TIMEOUT` - _Optional_. The number of seconds the action should wait for Platform.sh to report back with a PR 
+environment URL. Please note this is in seconds, not milliseconds. Must be a valid integer
 
 ### Uses
 * [platformsh/gha-retrieve-projectid](https://github.com/platformsh/gha-retrieve-projectid)
