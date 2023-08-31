@@ -30,3 +30,4 @@ jobs:
           delay-start: ${{ vars.DELAY_START }}
           baseline-header-response: $( [ -n "${{ vars.HEADER_RESPONSE }}" ] && echo "${{ vars.HEADER_RESPONSE }}" || echo 200 )
           test-header-response: $( [ -n "${{ vars.HEADER_RESPONSE }}" ] && echo "${{ vars.HEADER_RESPONSE }}" || echo 200 )
+          pr-timeout: $( [ -n "${{ vars.PR_ENV_TIMEOUT }}" ] && echo "${{ vars.PR_ENV_TIMEOUT }}" || echo 300 )
