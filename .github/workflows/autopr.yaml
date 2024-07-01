@@ -40,3 +40,4 @@ jobs:
           github-token: ${{ secrets.TEMPLATES_GITHUB_TOKEN }}
           trigger-source: 'auto push'
           default-branch: ${{ steps.prepautopr.outputs.default-branch }}
+          delete-branch-after-merge: 'yes'
