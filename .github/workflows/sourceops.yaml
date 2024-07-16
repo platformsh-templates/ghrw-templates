@@ -7,7 +7,16 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.repository_owner == 'platformsh-templates' }}
     steps:
-      - name: 'Run source ops'
+      - name: 'Run source ops with alt branch'
+        if: ${{ vars.SOP_UPDATE_BRANCH != '' }}
+        id: run-source-op-alt-branch
+        uses: platformsh/gha-run-sourceops-update@main
+        with:
+          github_token: ${{ secrets.TEMPLATES_GITHUB_TOKEN }}
+          platformsh_token: ${{ secrets.TEMPLATES_CLI_TOKEN }}
+          update_branch_name: ${{ vars.SOP_UPDATE_BRANCH }}
+      - name: 'Run source ops with default branch'
+        if: ${{ vars.SOP_UPDATE_BRANCH == '' }}
         id: run-source-op
         uses: platformsh/gha-run-sourceops-update@main
         with:
