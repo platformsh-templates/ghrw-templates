@@ -104,6 +104,9 @@ jobs:
 ## [sourceops.yaml](./.github/workflows/sourceops.yaml)
 ### Description
 Runs the Source Operations Toolkit
+### Inputs
+* To set the name of the branch the toolkit should target for the update, set a repository variable named `SOP_UPDATE_BRANCH`
+with the name of the branch.
 ### Uses
 * [platformsh/gha-run-sourceops-update](https://github.com/platformsh/gha-run-sourceops-update)
 ### Example:
