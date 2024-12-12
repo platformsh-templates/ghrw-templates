@@ -6,6 +6,8 @@ jobs:
     name: Record current rate limits
     runs-on: ubuntu-latest
     if: ${{ github.repository_owner == 'platformsh-templates' }}
+    env:
+      GH_TOKEN: ${{ secrets.TEMPLATES_GITHUB_TOKEN }}
     steps:
       - name: Current rate limits
         run: |
