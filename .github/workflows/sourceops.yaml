@@ -2,6 +2,16 @@ on:
   workflow_call:
 
 jobs:
+  record-rate:
+    name: Record current rate limits
+    runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'platformsh-templates' }}
+    steps:
+      - name: Current rate limits
+        run: |
+          curdate=$(date)
+          echo "::notice::Current rate limits as of ${curdate}"
+          gh api -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /rate_limit | jq
   run_dm_update:
     name: Trigger Source Op
     runs-on: ubuntu-latest
