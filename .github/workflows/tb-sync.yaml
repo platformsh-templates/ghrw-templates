@@ -144,8 +144,10 @@ jobs:
           # Get current template name.
           arrIN=(${GITHUB_REPOSITORY//\// })
           TEMPLATE=${arrIN[1]}
+          # all template directories in template builder are lowercase; we have a few repositories that use camelCase
+          TEMPLATELOWER=$(echo "${TEMPLATE}" | tr '[A-Z]' '[a-z]')
           # we need this in a later step as well
-          echo "TEMPLATENAME=${TEMPLATE}" >> $GITHUB_ENV
+          echo "TEMPLATENAME=${TEMPLATELOWER}" >> $GITHUB_ENV
 
       - name: 'Prep issue message'
         if: >-
