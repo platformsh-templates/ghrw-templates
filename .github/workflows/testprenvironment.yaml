@@ -13,7 +13,7 @@ jobs:
         uses: platformsh/gha-retrieve-projectid@main
         with:
           github_token: ${{ secrets.TEMPLATES_GITHUB_TOKEN }}
-          
+
       - name: 'Get Production URL'
         id: 'get-prod-url'
         uses: platformsh/gha-retrieve-production-url@main
@@ -28,6 +28,6 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           baseline-url: ${{ steps.get-prod-url.outputs.production_url }}
           delay-start: ${{ vars.DELAY_START }}
-          baseline-header-response: $( [ -n "${{ vars.HEADER_RESPONSE }}" ] && echo "${{ vars.HEADER_RESPONSE }}" || echo 200 )
-          test-header-response: $( [ -n "${{ vars.HEADER_RESPONSE }}" ] && echo "${{ vars.HEADER_RESPONSE }}" || echo 200 )
-          pr-timeout: $( [ -n "${{ vars.PR_ENV_TIMEOUT }}" ] && echo "${{ vars.PR_ENV_TIMEOUT }}" || echo 300 )
+          baseline-header-response: ${{ vars.HEADER_RESPONSE || '200' }}
+          test-header-response: ${{ vars.HEADER_RESPONSE || '200' }}
+          pr-timeout: ${{ vars.PR_ENV_TIMEOUT || '300' }}
